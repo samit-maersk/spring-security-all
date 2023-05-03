@@ -26,6 +26,7 @@ public class SecurityConfiguration {
         InMemoryUserDetailsManager users = new InMemoryUserDetailsManager();
         var bob = new User("bob", passwordEncoder().encode("1234"), Collections.emptyList());
         var bil = User.builder()
+                //authentication (user & password) , authorization (roles & authorities)
                 .username("bil")
                 .password(passwordEncoder().encode("321"))
                 //roles - are like ADMIN, USER, STUDENT, TEACHER
