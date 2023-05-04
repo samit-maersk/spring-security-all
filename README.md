@@ -161,3 +161,34 @@ public class HomeControllerTest {
 
 ### Oauth2 support
 - Watch [this video](https://www.youtube.com/watch?v=40BxatEr5aE&list=PLLhgRnf2WBVQe1iPUuNZnMmlqK6vd_o59&index=3) for more details.
+- add the following dependency
+```xml
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-oauth2-client</artifactId>
+</dependency>
+```
+- add the following properties to `application.properties`
+```properties
+spring.security.oauth2.client.registration.github.client-id=your-client-id
+spring.security.oauth2.client.registration.github.client-secret=your-client-secret
+
+spring.security.oauth2.client.registration.google.client-id=your-client-id
+spring.security.oauth2.client.registration.google.client-secret=your-client-secret
+```
+- after this when you access the application, you will see a login page with 2 options to login with google or github. The username /password inputs are missing.
+- To make that happen , you have to expose a Bean `SecurityFilterChain` like below:
+```java
+    @Bean
+    @SneakyThrows
+    SecurityFilterChain securityFilterChain(HttpSecurity http) {
+            return http
+            //Here, we are telling spring security to show the form login
+            .formLogin(Customizer.withDefaults())
+            // and we are telling spring security to use oauth2 login
+            .oauth2Login(Customizer.withDefaults())
+            .authorizeHttpRequests(c -> c.anyRequest().authenticated())
+            .build();
+            }
+```
+- restart the application and you will see the login page with username/password inputs along with 2 options to login with google or github.
